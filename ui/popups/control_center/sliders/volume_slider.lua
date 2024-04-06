@@ -33,7 +33,7 @@ local volume_slider = wibox.widget({
   handle_border_color = "#4682b8",
   minimum = 0,
   maximum = 100,
-  value = tonumber(io.popen("amixer sget Master | grep 'Right:' | awk -F'[][]' '{ print substr($2, 1, length($2)-1) }'")
+  value = tonumber(io.popen("amixer -c 2 sget Master | grep 'Right:' | awk -F'[][]' '{ print substr($2, 1, length($2)-1) }'")
     :read("*all"))
 })
 
@@ -41,7 +41,11 @@ local volume_slider = wibox.widget({
 local update_volume_slider = function()
   awful.spawn.easy_async("amixer sget Master", function(stdout)
     local volume = tonumber(string.match(stdout, "(%d?%d?%d)%%"))
-    volume_slider.value = volume
+    if (volume == nil) then
+      volume_slider.value = 0
+    else
+      volume_slider.value = volume
+    end
   end)
 end
 

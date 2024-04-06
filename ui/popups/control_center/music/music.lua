@@ -17,12 +17,11 @@ local color = require("ui.popups.color")
 
 local art = wibox.widget {
   image = os.getenv("HOME") .. "/.config/awesome/ui/popups/control_center/assets/music.svg",
-
   resize = true,
   forced_height = dpi(45),
   forced_width = dpi(80),
   widget = wibox.widget.imagebox,
-  valign = left,
+  valign = 'left'
 }
 
 
@@ -31,8 +30,8 @@ local name_widget = wibox.widget {
   align = 'left',
   valign = 'top',
   widget = wibox.widget.textbox,
-  font = "CaskaydiaCove Nerd Font 14",
-  forced_width = dpi(200),
+  font = "JetBrainsMono Nerd Font 14",
+  forced_width = dpi(200)
 }
 
 local title_widget = wibox.widget {
@@ -41,9 +40,9 @@ local title_widget = wibox.widget {
   align = 'left',
   valign = 'top',
   widget = wibox.widget.textbox,
-  font = "CaskaydiaCove Nerd Font 12",
+  font = "JetBrainsMono Nerd Font 12",
   forced_width = dpi(210),
-  forced_height = dpi(25),
+  forced_height = dpi(25)
 }
 
 local artist_widget = wibox.widget {
@@ -52,9 +51,9 @@ local artist_widget = wibox.widget {
   align = 'left',
   valign = 'bottom',
   widget = wibox.widget.textbox,
-  font = "CaskaydiaCove Nerd Font 10",
+  font = "JetBrainsMono Nerd Font 10",
   forced_width = dpi(210),
-  forced_height = dpi(20),
+  forced_height = dpi(20)
 }
 
 -- Get Song Info
@@ -79,12 +78,11 @@ playerctl:connect_signal("metadata",
 --Play pause button
 local button = wibox.widget {
   image = os.getenv("HOME") .. "/.config/awesome/ui/popups/control_center/assets/pause.png",
-
   resize = true,
   forced_height = dpi(25),
   forced_width = dpi(25),
   widget = wibox.widget.imagebox,
-  valign = "center",
+  valign = "center"
 }
 
 --Play pause button functionality

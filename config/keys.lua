@@ -27,7 +27,7 @@ local keys = {
 awful.keyboard.append_global_keybindings({
     -- restart awesomewm
     awful.key {
-        modifiers = { keys.mod, keys.ctrl},
+        modifiers = { keys.mod, keys.ctrl },
         key = "r",
         group = "awesome",
         description = "reload",
@@ -512,15 +512,20 @@ awful.keyboard.append_global_keybindings({
     -- Increase number of columns
     awful.key {
         modifiers = { keys.mod, keys.ctrl },
-        key = "h",
-        group = "layout",
-        description = "increase number of columns",
-        modifiers = { keys.mod, keys.ctrl },
         key = "l",
         group = "layout",
         description = "decrease number of columns",
         on_press = function()
             awful.tag.incncol(-1, nil, true)
+        end
+    },
+    awful.key {
+        modifiers = { keys.mod, keys.ctrl },
+        key = "h",
+        group = "layout",
+        description = "increase number of columns",
+        on_press = function()
+            awful.tag.incncol(1, nil, true)
         end
     }
 })

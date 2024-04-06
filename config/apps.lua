@@ -59,7 +59,7 @@ end
 
 function app:toggle()
     if self.run_or_raise == true then
-        helpers.client.run_or_raise({class = self.class}, false, self.command, { switchtotag = true })
+        helpers.client.run_or_raise({ class = self.class }, false, self.command, { switchtotag = true })
     else
         awful.spawn(self.command)
     end
@@ -90,8 +90,8 @@ function apps:new(id, key, command, class, args)
     ret.class = class
     ret.scratchpad_command = args.scratchpad_command or command
     ret.scratchpad_class = args.scratchpad_class or class
-    ret.launch_modifiers = args.launch_modifiers or {keys.mod, keys.ctrl}
-    ret.scratchpad_modifiers = args.scratchpad_modifiers or {keys.mod, keys.alt}
+    ret.launch_modifiers = args.launch_modifiers or { keys.mod, keys.ctrl }
+    ret.scratchpad_modifiers = args.scratchpad_modifiers or { keys.mod, keys.alt }
     ret.geometry = args.geometry or centered_gemotery()
     ret.new_animation_on_toggle = args.new_animation_on_toggle == nil and true or args.new_animation_on_toggle
     ret.run_or_raise = args.run_or_raise == nil and true or args.run_or_raise
@@ -100,7 +100,7 @@ function apps:new(id, key, command, class, args)
     ret.x = args.x or x
     ret.y = args.y or y
 
-    ret.scratchpad = bling.module.scratchpad:new{
+    ret.scratchpad = bling.module.scratchpad:new {
         command = ret.scratchpad_command,
         rule = { class = ret.scratchpad_class },
         sticky = false,
@@ -133,7 +133,7 @@ function apps:new(id, key, command, class, args)
     --     ret.scratchpad.rubato.y.easing = helpers.animation.easing.outBounce
     -- end)
 
-    awful.keyboard.append_global_keybindings({awful.key {
+    awful.keyboard.append_global_keybindings({ awful.key {
         modifiers = ret.scratchpad_modifiers,
         key = ret.key,
         group = "apps",
@@ -141,9 +141,9 @@ function apps:new(id, key, command, class, args)
         on_press = function()
             ret:scratchpad_toggle()
         end
-    }})
+    } })
 
-    awful.keyboard.append_global_keybindings({awful.key {
+    awful.keyboard.append_global_keybindings({ awful.key {
         modifiers = ret.launch_modifiers,
         key = ret.key,
         group = "apps",
@@ -151,7 +151,7 @@ function apps:new(id, key, command, class, args)
         on_press = function()
             ret:toggle()
         end
-    }})
+    } })
 end
 
 local function new()
@@ -171,20 +171,24 @@ local function new()
     -- ret:new("spotify", "s", "spotify", "Spotify")
     -- ret:new("openrgb", "o", "openrgb --server --gui", "openrgb")
     -- ret:new("authy", "a", "authy", "Authy Desktop", {
-        -- geometry = centered_gemotery(400, 800)
+    -- geometry = centered_gemotery(400, 800)
     -- })
+    ret:new("shutter", "p", "shutter -s", "Screenshot", {
+        launch_modifiers = { keys.mod, keys.shift },
+        run_or_raise = false
+    })
     ret:new("ranger", "r", "kitty --class file-manager ranger", "file-manager", {
         run_or_raise = false
     })
     ret:new("kitty", "Return", "kitty", "kitty", {
-        launch_modifiers = {keys.mod},
+        launch_modifiers = { keys.mod },
         run_or_raise = false,
         geometry = terminal_gemotery(),
         scratchpad_command = "kitty --class scratchpad",
         scratchpad_class = "scratchpad"
     })
     ret:new("gnome-sysetm-monitor", "Delete", "gnome-system-monitor", "Gnome-system-monitor", {
-        launch_modifiers = {keys.ctrl, keys.alt}
+        launch_modifiers = { keys.ctrl, keys.alt }
     })
 
     return ret

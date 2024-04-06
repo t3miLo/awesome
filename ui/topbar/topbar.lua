@@ -28,7 +28,7 @@ local batteryarc_widget = require("ui.deco.batteryarc")
 ---------------------------
 
 --textclock widget
-mytextclock = wibox.widget.textclock(
+local mytextclock = wibox.widget.textclock(
   '<span color="' .. color.white .. '" font="JetBrainsMono Nerd Font Bold 13"> %a %b %d, %H:%M </span>', 10)
 
 
@@ -49,7 +49,90 @@ mytextclock:connect_signal("button::press", function(_, _, _, button)
 end)
 
 
---Fancy taglist widget
+-- Fancy taglist widget
+-- screen.connect_signal("request::desktop_decoration", function(s)
+-- local fancy_taglist = require("ui.topbar.fancy_taglist")
+-- mytaglist = fancy_taglist.new({
+-- screen   = s,
+-- taglist  = { buttons = taglist_buttons },
+-- tasklist = { buttons = tasklist_buttons },
+-- filter   = awful.widget.taglist.filter.all,
+-- style    = {
+-- shape = gears.shape.rounded_rect
+-- },
+-- })
+
+-- local power_button = require("ui.topbar.power_button")
+-- local top_left = require("ui.topbar.top_left")
+-- local systray = require("ui.topbar.systray")
+
+-- local mywibox =
+-- awful.wibar({
+-- position = "bottom",
+-- margins = { top = dpi(7), left = dpi(8), right = dpi(8), bottom = 0 },
+-- margins = { top = dpi(0), left = dpi(0), right = dpi(0), bottom = 0 },
+-- screen = s,
+-- height = dpi(35),
+-- opacity = 1,
+-- fg = color.blueish_white,
+-- bg = color.background_dark,
+-- shape = function(cr, width, height)
+-- gears.shape.rounded_rect(cr, width, height, 0)
+-- gears.shape.rounded_rect(cr, width, height, 8)
+-- end,
+
+-- })
+
+-- Main Wibar
+-- mywibox:setup({
+-- layout = wibox.layout.stack,
+-- expand = "none",
+-- {
+-- layout = wibox.layout.align.horizontal,
+-- {
+-- Left widgets
+-- layout = wibox.layout.fixed.horizontal,
+-- separator,
+-- power_button,
+-- separator,
+-- fancy_taglist,
+-- separator,
+-- mypromptbox
+-- wibox.widget({
+-- image = "home/amitabha/.icons/papirus-icon-theme-20230301/Papirus/22x22/apps/launch.svg",
+-- resize_allowed = true,
+-- widget = wibox.widget.imagebox,
+-- }),
+-- },
+-- nil,
+-- {
+-- Right widgets
+-- layout = wibox.layout.fixed.horizontal,
+-- systray,
+-- separator,
+-- top_left,
+-- separator,
+-- batteryarc_widget({
+-- show_current_level = true,
+-- arc_thickness = 3,
+-- size = 26,
+-- font = "JetBrainsMono Nerd Font 10",
+-- margins = 55,
+-- timeout = 10,
+-- }),
+
+-- separator
+-- },
+-- },
+-- {
+-- mytextclock,
+-- valign = "center",
+-- halign = "center",
+-- layout = wibox.container.place
+-- },
+-- })
+-- end)
+
 awful.screen.connect_for_each_screen(function(s)
   local fancy_taglist = require("ui.topbar.fancy_taglist")
   mytaglist = fancy_taglist.new({
@@ -61,96 +144,174 @@ awful.screen.connect_for_each_screen(function(s)
       shape = gears.shape.rounded_rect
     },
   })
+  local power_button = require("ui.topbar.power_button")
+  local top_left = require("ui.topbar.top_left")
+  local systray = require("ui.topbar.systray")
+
+  local fancy_taglist = wibox.widget {
+    {
+      mytaglist,
+      widget = wibox.container.background,
+      shape  = gears.shape.rounded_rect,
+      bg     = color.background_lighter
+    },
+    left   = dpi(3),
+    right  = dpi(3),
+    top    = dpi(3),
+    bottom = dpi(3),
+    widget = wibox.container.margin
+  }
+  s.mywibox = awful.wibar({
+    position = "bottom",
+    margins = { top = dpi(7), left = dpi(8), right = dpi(8), bottom = 0 },
+    -- margins = { top = dpi(0), left = dpi(0), right = dpi(0), bottom = 0 },
+    screen = s,
+    height = dpi(35),
+    opacity = 1,
+    fg = color.blueish_white,
+    bg = color.background_dark,
+    shape = function(cr, width, height)
+      -- gears.shape.rounded_rect(cr, width, height, 0)
+      gears.shape.rounded_rect(cr, width, height, 8)
+    end,
+    widget = {
+      layout = wibox.layout.stack,
+      expand = "none",
+      {
+        layout = wibox.layout.align.horizontal,
+        {
+          -- Left widgets
+          layout = wibox.layout.fixed.horizontal,
+          separator,
+          power_button,
+          separator,
+          fancy_taglist,
+          separator,
+          mypromptbox,
+          wibox.widget({
+            image = "/home/albert/.icons/Papirus/22x22/apps/launch.svg",
+            resize_allowed = true,
+            widget = wibox.widget.imagebox,
+          }),
+        },
+        nil,
+        {
+          -- Right widgets
+          layout = wibox.layout.fixed.horizontal,
+          systray,
+          separator,
+          top_left,
+          separator,
+          batteryarc_widget({
+            show_current_level = true,
+            arc_thickness = 3,
+            size = 26,
+            font = "JetBrainsMono Nerd Font 10",
+            margins = 55,
+            timeout = 10,
+          }),
+          separator
+        },
+      },
+      {
+        mytextclock,
+        valign = "center",
+        halign = "center",
+        layout = wibox.container.place
+      },
+    }
+
+  })
 end)
 
---Taglist widget
-local fancy_taglist = wibox.widget {
-  {
-    mytaglist,
-    widget = wibox.container.background,
-    shape  = gears.shape.rounded_rect,
-    bg     = color.background_lighter
-  },
-  left   = dpi(3),
-  right  = dpi(3),
-  top    = dpi(3),
-  bottom = dpi(3),
-  widget = wibox.container.margin
-}
+-- Taglist
+-- widget
+-- local fancy_taglist = wibox.widget {
+-- {
+-- mytaglist,
+-- widget = wibox.container.background,
+-- shape  = gears.shape.rounded_rect,
+-- bg     = color.background_lighter
+-- },
+-- left   = dpi(3),
+-- right  = dpi(3),
+-- top    = dpi(3),
+-- bottom = dpi(3),
+-- widget = wibox.container.margin
+-- }
 
-local power_button = require("ui.topbar.power_button")
-local top_left = require("ui.topbar.top_left")
-local systray = require("ui.topbar.systray")
+-- local power_button = require("ui.topbar.power_button")
+-- local top_left = require("ui.topbar.top_left")
+-- local systray = require("ui.topbar.systray")
 
 
 -------------------------------------------
 -- the wibar
 -------------------------------------------
 
-mywibox =
-    awful.wibar({
-      position = "bottom",
-      margins = { top = dpi(7), left = dpi(8), right = dpi(8), bottom = 0 },
-      -- margins = { top = dpi(0), left = dpi(0), right = dpi(0), bottom = 0 },
-      screen = s,
-      height = dpi(35),
-      opacity = 1,
-      fg = color.blueish_white,
-      bg = color.background_dark,
-      shape = function(cr, width, height)
-        -- gears.shape.rounded_rect(cr, width, height, 0)
-        gears.shape.rounded_rect(cr, width, height, 8)
-      end,
+-- local mywibox = awful.wibar({
+-- position = "bottom",
+-- margins = { top = dpi(7), left = dpi(8), right = dpi(8), bottom = 0 },
+-- -- margins = { top = dpi(0), left = dpi(0), right = dpi(0), bottom = 0 },
+-- screen = s,
+-- height = dpi(35),
+-- opacity = 1,
+-- fg = color.blueish_white,
+-- bg = color.background_dark,
+-- shape = function(cr, width, height)
+-- -- gears.shape.rounded_rect(cr, width, height, 0)
+-- gears.shape.rounded_rect(cr, width, height, 8)
+-- end,
 
-    })
+-- })
 
---Main Wibar
-mywibox:setup({
-  layout = wibox.layout.stack,
-  expand = "none",
-  {
-    layout = wibox.layout.align.horizontal,
-    {
-      -- Left widgets
-      layout = wibox.layout.fixed.horizontal,
-      separator,
-      power_button,
-      separator,
-      fancy_taglist,
-      separator,
-      mypromptbox
-      -- wibox.widget({
-      --   image = "home/amitabha/.icons/papirus-icon-theme-20230301/Papirus/22x22/apps/launch.svg",
-      --   resize_allowed = true,
-      --   widget = wibox.widget.imagebox,
-      -- }),
-    },
-    nil,
-    {
-      -- Right widgets
-      layout = wibox.layout.fixed.horizontal,
-      systray,
-      separator,
-      top_left,
-      separator,
-      batteryarc_widget({
-        show_current_level = true,
-        arc_thickness = 3,
-        size = 26,
-        font = "JetBrainsMono Nerd Font 10",
-        margins = 55,
-        timeout = 10,
-      }),
+-- --Main Wibar
+-- mywibox:setup({
+-- layout = wibox.layout.stack,
+-- expand = "none",
+-- {
+-- layout = wibox.layout.align.horizontal,
+-- {
+-- -- Left widgets
+-- layout = wibox.layout.fixed.horizontal,
+-- separator,
+-- power_button,
+-- separator,
+-- fancy_taglist,
+-- separator,
+-- mypromptbox
+-- -- wibox.widget({
+-- --   image = "home/amitabha/.icons/papirus-icon-theme-20230301/Papirus/22x22/apps/launch.svg",
+-- --   resize_allowed = true,
+-- --   widget = wibox.widget.imagebox,
+-- -- }),
+-- },
+-- nil,
+-- {
+-- -- Right widgets
+-- layout = wibox.layout.fixed.horizontal,
+-- systray,
+-- separator,
+-- top_left,
+-- separator,
+-- batteryarc_widget({
+-- show_current_level = true,
+-- arc_thickness = 3,
+-- size = 26,
+-- font = "JetBrainsMono Nerd Font 10",
+-- margins = 55,
+-- timeout = 10,
+-- }),
 
-      separator
-    },
-  },
-  {
-    mytextclock,
-    valign = "center",
-    halign = "center",
-    layout = wibox.container.place
-  },
-})
+-- separator
+-- },
+-- },
+-- {
+-- mytextclock,
+-- valign = "center",
+-- halign = "center",
+-- layout = wibox.container.place
+-- },
+-- })
 
-return mywibox
+-- return mywibox
